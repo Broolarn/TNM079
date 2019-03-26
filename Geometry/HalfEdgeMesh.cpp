@@ -250,7 +250,23 @@ HalfEdgeMesh::FindNeighborVertices(size_t vertexIndex) const {
   // Collected vertices, sorted counter clockwise!
   std::vector<size_t> oneRing;
 
-  // Add your code here
+  // get all faces
+  //std::vector<size_t> neighborFaces = FindNeighborFaces(vertexIndex);
+  
+  HalfEdge edge = e(e(v(vertexIndex).edge).next);
+  size_t startVertex = edge.vert;
+  size_t currVertex = startVertex;
+  // fö 1 slide 10
+  do {
+      oneRing.push_back(currVertex);
+      edge = e(edge.next);
+      edge = e(edge.pair);
+      edge = e(edge.next);
+      currVertex = edge.vert;
+
+  } while (currVertex != startVertex);
+
+
 
   return oneRing;
 }
@@ -263,6 +279,21 @@ HalfEdgeMesh::FindNeighborVertices(size_t vertexIndex) const {
 std::vector<size_t> HalfEdgeMesh::FindNeighborFaces(size_t vertexIndex) const {
   // Collected faces, sorted counter clockwise!
   std::vector<size_t> foundFaces;
+  
+  // find all triangles with the vertex
+  HalfEdge edge = e(v(vertexIndex).edge);
+  size_t startface = edge.face;
+  size_t face = startface;
+  // fö 1 slide 10
+  do {
+      foundFaces.push_back(face);
+      edge = e(edge.prev);
+      edge = e(edge.pair);
+      face = edge.face;
+  } while (face != startface); // goes all the way around
+    
+
+
 
   // Add your code here
   return foundFaces;
@@ -304,6 +335,16 @@ Vector3<float> HalfEdgeMesh::VertexNormal(size_t vertexIndex) const {
   Vector3<float> n(0, 0, 0);
 
   // Add your code here
+  std::vector<size_t> neighborFaces = FindNeighborFaces(vertexIndex);
+  std::vector<size_t>::const_iterator iter = neighborFaces.begin();
+  std::vector<size_t>::const_iterator iend = neighborFaces.end();
+
+  while (iter != iend) {
+      n = n + f((*iter)).normal;
+      iter++;
+  };
+
+  n.Normalize();
   return n;
 }
 

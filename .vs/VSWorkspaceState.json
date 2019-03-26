@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Data",
+    "\\Data\\Object",
+    "\\Geometry"
   ],
-  "SelectedNode": "\\main.cpp",
+  "SelectedNode": "\\Geometry\\SimpleMesh.cpp",
   "PreviewInSolutionExplorer": false
 }

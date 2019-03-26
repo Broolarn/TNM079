@@ -156,12 +156,14 @@ std::vector<size_t> SimpleMesh::FindNeighborFaces(size_t vertexIndex) const {
   // Find other triangles that include this vertex
   std::vector<Face>::const_iterator iter = mFaces.begin();
   std::vector<Face>::const_iterator iend = mFaces.end();
+  
   while (iter != iend) {
     if ((*iter).v1 == vertexIndex || (*iter).v2 == vertexIndex ||
         (*iter).v3 == vertexIndex) {
       foundFaces.push_back(iter - mFaces.begin());
     }
     iter++;
+
   }
 
   // Pick prev vertex
