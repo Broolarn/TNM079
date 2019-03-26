@@ -428,7 +428,16 @@ void HalfEdgeMesh::Update() {
 float HalfEdgeMesh::Area() const {
   float area = 0;
   // Add code here
-  std::cerr << "Area calculation not implemented for half-edge mesh!\n";
+  for(unsigned int i = 0; i < mFaces.size(); ++i)
+  {
+      HalfEdge currEdge = e(f(i).edge);
+
+	  Vector3<float> v1 = v(e(currEdge.next).vert).pos - v(e(currEdge)).pos;
+      Vector3<float> v2 = v(e(currEdge.prev).vert).pos - v(e(currEdge)).pos;
+
+	  area += Cross(v1, v2).Length() / 2.0;
+
+  }
   return area;
 }
 
@@ -436,7 +445,7 @@ float HalfEdgeMesh::Area() const {
 float HalfEdgeMesh::Volume() const {
   float volume = 0;
   // Add code here
-  std::cerr << "Volume calculation not implemented for half-edge mesh!\n";
+	
   return volume;
 }
 

@@ -5,6 +5,6 @@
     "\\Data\\Object",
     "\\Geometry"
   ],
-  "SelectedNode": "\\Geometry\\SimpleMesh.cpp",
+  "SelectedNode": "\\Geometry\\HalfEdgeMesh.cpp",
   "PreviewInSolutionExplorer": false
 }
