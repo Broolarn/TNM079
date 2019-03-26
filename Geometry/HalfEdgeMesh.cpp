@@ -302,7 +302,32 @@ std::vector<size_t> HalfEdgeMesh::FindNeighborFaces(size_t vertexIndex) const {
 /*! \lab1 Implement the curvature */
 float HalfEdgeMesh::VertexCurvature(size_t vertexIndex) const {
   // Copy code from SimpleMesh or compute more accurate estimate
-  return 0;
+    std::vector<size_t> oneRing = FindNeighborVertices(vertexIndex);
+    assert(oneRing.size() != 0);
+
+    size_t curr, next;
+    const Vector3<float> &vi = mVerts.at(vertexIndex).pos;
+    float angleSum = 0;
+    float area = 0;
+    for (size_t i = 0; i < oneRing.size(); i++) {
+        // connections
+        curr = oneRing.at(i);
+        if (i < oneRing.size() - 1)
+            next = oneRing.at(i + 1);
+        else
+            next = oneRing.front();
+
+        // find vertices in 1-ring according to figure 5 in lab text
+        // next - beta
+        const Vector3<float> &nextPos = mVerts.at(next).pos;
+        const Vector3<float> &vj = mVerts.at(curr).pos;
+
+        // compute angle and area
+        angleSum +=
+            acos((vj - vi) * (nextPos - vi) / ((vj - vi).Length() * (nextPos - vi).Length()));
+        area += Cross((vi - vj), (nextPos - vj)).Length() * 0.5f;
+    }
+    return (2.0f * static_cast<float>(M_PI) - angleSum) / area;
 }
 
 float HalfEdgeMesh::FaceCurvature(size_t faceIndex) const {
@@ -427,7 +452,7 @@ void HalfEdgeMesh::Update() {
 /*! \lab1 Implement the area */
 float HalfEdgeMesh::Area() const {
   float area = 0;
-  // Add code here
+  // Area i kompendiet
   for(unsigned int i = 0; i < mFaces.size(); ++i)
   {
       HalfEdge currEdge = e(f(i).edge);
@@ -444,8 +469,20 @@ float HalfEdgeMesh::Area() const {
 /*! \lab1 Implement the volume */
 float HalfEdgeMesh::Volume() const {
   float volume = 0;
-  // Add code here
-	
+  // Fö 2 slide 12-14 och volume i kompendiet
+  for (unsigned int i = 0; i < mFaces(); ++i) {
+      HalfEdge currEdge = e(f(i).edge);
+
+	  Vector<float> center = (v(currEdge.vert)).pos + v(e(currEdge.next).vert).pos + v(e(currEdge.prev).vert).pos);
+
+	  Vector3<float> v1 = v(e(currEdge.next).vert).pos - v(e(currEdge)).pos;
+      Vector3<float> v2 = v(e(currEdge.prev).vert).pos - v(e(currEdge)).pos;
+
+      float currArea = Cross(v1, v2).Length() / 2.0;
+
+	  volume += center * f(i).normal * currArea;
+
+  }
   return volume;
 }
 
